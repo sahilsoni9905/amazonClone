@@ -1,3 +1,4 @@
+import 'package:amazon_clone/common/widgets/custom_button.dart';
 import 'package:amazon_clone/common/widgets/custom_text_field.dart';
 import 'package:amazon_clone/constants/global_variables.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +62,7 @@ class _AuthScreenState extends State<AuthScreen> {
             if (_auth == Auth.signup)
               Container(
                 padding: const EdgeInsets.all(8),
-                color: Color.fromARGB(255, 255, 255, 255),
+                color: const Color.fromARGB(255, 255, 255, 255),
                 child: Form(
                   key: _signUpFormKey,
                   child: Column(
@@ -83,7 +84,11 @@ class _AuthScreenState extends State<AuthScreen> {
                       CustomTextField(
                         controller: _passwordController,
                         hintText: "password:",
-                      )
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      CustomButton(text: "Sign-Up", ontap: () {})
                     ],
                   ),
                 ),
