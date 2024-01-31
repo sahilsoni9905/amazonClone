@@ -37,6 +37,7 @@ class _AuthScreenState extends State<AuthScreen> {
           child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
               "welcome",
@@ -109,7 +110,34 @@ class _AuthScreenState extends State<AuthScreen> {
                   });
                 },
               ),
-            )
+            ),
+            if (_auth == Auth.signin)
+              Container(
+                padding: const EdgeInsets.all(8),
+                color: const Color.fromARGB(255, 255, 255, 255),
+                child: Form(
+                  key: _signUpFormKey,
+                  child: Column(
+                    children: [
+                      CustomTextField(
+                        controller: _emailController,
+                        hintText: "Email:",
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      CustomTextField(
+                        controller: _passwordController,
+                        hintText: "password:",
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      CustomButton(text: "Sign-In", ontap: () {})
+                    ],
+                  ),
+                ),
+              ),
           ],
         ),
       )),
