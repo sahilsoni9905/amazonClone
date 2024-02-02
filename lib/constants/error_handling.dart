@@ -9,7 +9,6 @@ void httpErrorHandler({
   required BuildContext context,
   required VoidCallback onSuccess,
 }) {
-  print('reached error handler');
   switch (response.statusCode) {
     case 200:
       onSuccess();

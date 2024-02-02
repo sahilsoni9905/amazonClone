@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:amazon_clone/common/widgets/bottom_bar.dart';
 import 'package:amazon_clone/constants/error_handling.dart';
 import 'package:amazon_clone/constants/global_variables.dart';
 import 'package:amazon_clone/constants/utils.dart';
@@ -26,7 +27,6 @@ class AuthService {
           address: '',
           type: '',
           token: '');
-
       http.Response res = await http.post(
         Uri.parse("$uri/api/signup"),
         body: user.toJson(),
@@ -34,6 +34,7 @@ class AuthService {
           'Content-Type': 'application/json; charset=UTF-8'
         },
       );
+      print("the res is $res");
 
       // ignore: use_build_context_synchronously
       httpErrorHandler(
@@ -63,7 +64,8 @@ class AuthService {
           'Content-Type': 'application/json; charset=UTF-8'
         },
       );
-      print(res.body);
+      print("oure res.body is : " + res.body);
+      print("oure resis : " + res.toString());
 
       // ignore: use_build_context_synchronously
       httpErrorHandler(
@@ -73,17 +75,50 @@ class AuthService {
             showSnackbar(context, 'login successfull');
 
             SharedPreferences prefs = await SharedPreferences.getInstance();
-            print("hello");
 
             Provider.of<userProvider>(context, listen: false).setUser(res.body);
+
+            //now under a x-auth-token key token is stored that was saved by server
             await prefs.setString(
                 'x-auth-token', jsonDecode(res.body)['token']);
 
             Navigator.pushNamedAndRemoveUntil(
-                context, HomeScreen.routeName, (route) => false);
+                context, BottomBar.routeName, (route) => false);
           });
-      // ignore: avoid_print
-      print('account successfully created');
+    } catch (e) {
+      print("there is something error");
+      showSnackbar(context, e.toString());
+    }
+  }
+  //get user data
+
+  void getUserData({
+    required BuildContext context,
+  }) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('x-auth-token');
+      if (token == null) {
+        prefs.setString('x-auth-token', '');
+      }
+      var tokenRes = await http.post(Uri.parse('$uri/tokenIsValid'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': token!
+          });
+
+      var response = jsonDecode(tokenRes.body);
+      if (response == true) {
+        //get user data
+        http.Response userRes = await http.get(Uri.parse('$uri/'),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+              'x-auth-token': token
+            });
+
+        var UserProvider = Provider.of<userProvider>(context, listen: false);
+        UserProvider.setUser(userRes.body);
+      }
     } catch (e) {
       print("there is something error");
       showSnackbar(context, e.toString());
