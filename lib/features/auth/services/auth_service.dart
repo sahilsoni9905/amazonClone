@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'package:amazon_clone/common/widgets/bottom_bar.dart';
 import 'package:amazon_clone/constants/error_handling.dart';
@@ -64,32 +66,31 @@ class AuthService {
           'Content-Type': 'application/json; charset=UTF-8'
         },
       );
-      print("oure res.body is : " + res.body);
-      print("oure resis : " + res.toString());
 
-      // ignore: use_build_context_synchronously
-      httpErrorHandler(
+      if (res.statusCode == 200) {
+        print("Response body: ${res.body}");
+        httpErrorHandler(
           response: res,
           context: context,
           onSuccess: () async {
-            showSnackbar(context, 'login successfull');
-
+            showSnackbar(context, 'Login successful');
             SharedPreferences prefs = await SharedPreferences.getInstance();
-
             Provider.of<userProvider>(context, listen: false).setUser(res.body);
-
-            //now under a x-auth-token key token is stored that was saved by server
             await prefs.setString(
                 'x-auth-token', jsonDecode(res.body)['token']);
-
             Navigator.pushNamedAndRemoveUntil(
                 context, BottomBar.routeName, (route) => false);
-          });
+          },
+        );
+      } else {
+        throw Exception('Failed to sign in: ${res.statusCode}');
+      }
     } catch (e) {
-      print("there is something error");
-      showSnackbar(context, e.toString());
+      print("Error signing in: $e");
+      showSnackbar(context, 'Error signing in: $e');
     }
   }
+
   //get user data
 
   void getUserData({
@@ -101,11 +102,13 @@ class AuthService {
       if (token == null) {
         prefs.setString('x-auth-token', '');
       }
+      print("i am here ... sahil");
       var tokenRes = await http.post(Uri.parse('$uri/tokenIsValid'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'x-auth-token': token!
           });
+      print("got tokenres");
 
       var response = jsonDecode(tokenRes.body);
       if (response == true) {

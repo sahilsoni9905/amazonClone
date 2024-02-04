@@ -10,7 +10,7 @@ class TopCategories extends StatelessWidget {
       height: 60,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemExtent: 70,
+        itemExtent: 75,
         itemCount: GlobalVariables.categoryImages.length,
         itemBuilder: (context, index) {
           return Column(
@@ -25,6 +25,13 @@ class TopCategories extends StatelessWidget {
                     height: 40,
                     width: 40,
                   ),
+                ),
+              ),
+              Text(
+                GlobalVariables.categoryImages[index]['title']!,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
                 ),
               )
             ],
