@@ -71,17 +71,19 @@ class _PostsScreenState extends State<PostsScreen> {
                             maxLines: 2,
                           ),
                         ),
-                        IconButton(
-                            onPressed: () {
-                              deleteProducts(productData, index);
-                            },
-                            icon: const Icon(Icons.delete_forever_outlined)),
                       ],
                     )
                   ],
                 );
               },
             ),
+            floatingActionButton: FloatingActionButton(
+              child: const Icon(Icons.add),
+              onPressed: navigateToAddProduct,
+              tooltip: 'Add a Product',
+            ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
           );
   }
 }
