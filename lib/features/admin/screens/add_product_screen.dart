@@ -4,6 +4,8 @@ import 'package:amazon_clone/common/widgets/custom_button.dart';
 import 'package:amazon_clone/common/widgets/custom_text_field.dart';
 import 'package:amazon_clone/constants/global_variables.dart';
 import 'package:amazon_clone/constants/utils.dart';
+import 'package:amazon_clone/services/admin_service.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 
@@ -20,6 +22,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController quantityController = TextEditingController();
+  final AdminServices adminServices = AdminServices();
 
   @override
   void dispose() {
@@ -38,7 +41,21 @@ class _AddProductScreenState extends State<AddProductScreen> {
     'Books',
     'Fashion'
   ];
+  void sellProduct() {
+    if (_addProductFormKey.currentState!.validate() && images.isNotEmpty) {
+      adminServices.sellProduct(
+          context: context,
+          name: productNameController.text,
+          description: descriptionController.text,
+          price: double.parse(priceController.text),
+          quantity: double.parse(quantityController.text),
+          category: category,
+          images: images);
+    }
+  }
+
   List<File> images = [];
+  final _addProductFormKey = GlobalKey<FormState>();
   void selectImage() async {
     var res = await pickImages();
     setState(() {
@@ -48,6 +65,20 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (images.isEmpty == false) {
+      for (int i = 0; i < images.length; i++) {
+        Builder(
+          builder: (BuildContext context) => Image.file(
+            images[i],
+            fit: BoxFit.cover,
+            height: 200,
+          ),
+        );
+      }
+    } else {
+      // You might want to handle the case when carouselImages is null
+      // You can add a placeholder image or display an error message
+    }
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(50),
@@ -64,6 +95,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
       ),
       body: SingleChildScrollView(
         child: Form(
+          key: _addProductFormKey,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Column(
@@ -71,39 +103,54 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                GestureDetector(
-                  onTap: selectImage,
-                  child: DottedBorder(
-                    borderType: BorderType.RRect,
-                    radius: const Radius.circular(10),
-                    dashPattern: [10, 4],
-                    strokeCap: StrokeCap.round,
-                    child: Container(
-                      width: double.infinity,
-                      height: 150,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.folder_open,
-                            size: 40,
+                images.isNotEmpty
+                    ? CarouselSlider(
+                        items: images.map((File imageFile) {
+                          return Image.file(
+                            imageFile,
+                            fit: BoxFit.cover,
+                            height: 200,
+                          );
+                        }).toList(),
+                        options: CarouselOptions(
+                          viewportFraction: 1,
+                          height: 200,
+                        ),
+                      )
+                    : GestureDetector(
+                        onTap: selectImage,
+                        child: DottedBorder(
+                          borderType: BorderType.RRect,
+                          radius: const Radius.circular(10),
+                          dashPattern: [10, 4],
+                          strokeCap: StrokeCap.round,
+                          child: Container(
+                            width: double.infinity,
+                            height: 150,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.folder_open,
+                                  size: 40,
+                                ),
+                                const SizedBox(
+                                  height: 15,
+                                ),
+                                Text(
+                                  "Select Product Images",
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.grey.shade400),
+                                )
+                              ],
+                            ),
                           ),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          Text(
-                            "Select Product Images",
-                            style: TextStyle(
-                                fontSize: 15, color: Colors.grey.shade400),
-                          )
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                ),
                 const SizedBox(
                   height: 30,
                 ),
@@ -148,7 +195,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                CustomButton(text: 'Sell', ontap: () {})
+                CustomButton(text: 'Sell', ontap: sellProduct)
               ],
             ),
           ),
