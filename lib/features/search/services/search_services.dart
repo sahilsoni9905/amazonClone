@@ -34,6 +34,7 @@ class SearchServices {
             }
           });
     } catch (e) {
+      print("yha p part 4 me dikkat h");
       showSnackbar(context, e.toString());
     }
     return productList;

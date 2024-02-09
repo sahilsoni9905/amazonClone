@@ -74,6 +74,7 @@ authRouter.post("/tokenIsValid" , async(req , res) => {
         if(!Verified){
             return res.json(false);
         }
+        console.log("ho gya verify");
 
         const user = await User.findById(Verified.id);
         if(!user) return res.json(false);
