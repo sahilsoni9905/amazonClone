@@ -40,6 +40,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     }
   }
 
+  void addToCart() {
+    productDetailsServices.addToCart(context: context, product: widget.product);
+    setState(() {});
+  }
+
   void navigateToSearchScreen(String query) {
     Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
   }
@@ -198,7 +203,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               child: CustomButton(
                 text: 'Add To Cart',
-                ontap: () {},
+                ontap: addToCart,
                 color: Color.fromRGBO(254, 216, 19, 1),
               ),
             ),

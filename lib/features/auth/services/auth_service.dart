@@ -28,7 +28,8 @@ class AuthService {
           email: email,
           address: '',
           type: '',
-          token: '');
+          token: '',
+          cart: []);
       http.Response res = await http.post(
         Uri.parse("$uri/api/signup"),
         body: user.toJson(),
@@ -102,13 +103,12 @@ class AuthService {
       if (token == null) {
         prefs.setString('x-auth-token', '');
       }
-      print("i am here ... sahil");
+
       var tokenRes = await http.post(Uri.parse('$uri/tokenIsValid'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'x-auth-token': token!
           });
-      print("got tokenres");
 
       var response = jsonDecode(tokenRes.body);
       if (response == true) {
