@@ -60,6 +60,7 @@ class AuthService {
     required String password,
   }) async {
     try {
+      print("apple 1");
       http.Response res = await http.post(
         Uri.parse("$uri/api/signin"),
         body: jsonEncode({"email": email, "password": password}),
@@ -67,6 +68,7 @@ class AuthService {
           'Content-Type': 'application/json; charset=UTF-8'
         },
       );
+      print("apple 2");
 
       if (res.statusCode == 200) {
         print("Response body: ${res.body}");

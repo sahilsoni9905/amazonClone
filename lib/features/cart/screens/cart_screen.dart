@@ -1,8 +1,13 @@
+import 'package:amazon_clone/common/widgets/custom_button.dart';
 import 'package:amazon_clone/constants/global_variables.dart';
+import 'package:amazon_clone/features/address/screen/address_screen.dart';
+import 'package:amazon_clone/features/cart/widgets/cart_product.dart';
 import 'package:amazon_clone/features/cart/widgets/cart_sub_total.dart';
 import 'package:amazon_clone/features/home/widgets/address_box.dart';
 import 'package:amazon_clone/features/search/screen/search_screen.dart';
+import 'package:amazon_clone/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -16,8 +21,16 @@ class _CartScreenState extends State<CartScreen> {
     Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
   }
 
+  void navigateToAddress() {
+    Navigator.pushNamed(
+      context,
+      AddressScreen.routeName,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final user = context.watch<userProvider>().user;
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
@@ -90,6 +103,32 @@ class _CartScreenState extends State<CartScreen> {
           children: [
             const AddressBox(),
             const CartSubTotal(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CustomButton(
+                text: 'Proceed to Buy ${user.cart.length} items',
+                ontap: navigateToAddress,
+                color: Colors.yellow,
+              ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            Container(
+              color: Color.fromARGB(131, 232, 231, 231),
+              height: 1,
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              itemExtent: 200,
+              itemCount: user.cart.length,
+              itemBuilder: (BuildContext context, int index) {
+                return CartProduct(index: index);
+              },
+            ),
           ],
         ),
       ),
