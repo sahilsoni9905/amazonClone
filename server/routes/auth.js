@@ -46,7 +46,7 @@ authRouter.post("/api/signup" , async(req , res) =>{
 authRouter.post("/api/signin" , async(req , res) => {
     try {
         const {email , password} = req.body;
-        console.log("reachead 1"); // why this is not getting console
+        
         const user = await User.findOne({email});
         if(!user){
             return res.status(400).json({msg : "user with this email not exist"});
