@@ -10,6 +10,7 @@ authRouter.post("/api/signup" , async(req , res) =>{
     // get the data from client
     //post that data in database
     // return that data
+    console.log('reached here');
     try {
         const {name , email , password } =  req.body;
         const existingUser = await User.findOne({email});

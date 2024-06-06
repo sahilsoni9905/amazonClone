@@ -9,9 +9,9 @@ const userRouter = require("./routes/user");
 
 const PORT = 3000;
 const DB_URL = 'mongodb+srv://sonisahil9905:sahilstyles1@cluster0.vdwbstt.mongodb.net/?retryWrites=true&w=majority';
-
-
-
+//mongodb+srv://sonisahil9905:<password>@cluster0.vdwbstt.mongodb.net/
+//s
+console.log('sahil soni is here');
 const app = express();
 //middle ware
 app.use(express.json())

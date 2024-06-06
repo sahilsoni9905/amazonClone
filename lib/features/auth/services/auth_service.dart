@@ -30,6 +30,7 @@ class AuthService {
           type: '',
           token: '',
           cart: []);
+      print('part1');
       http.Response res = await http.post(
         Uri.parse("$uri/api/signup"),
         body: user.toJson(),
@@ -37,7 +38,8 @@ class AuthService {
           'Content-Type': 'application/json; charset=UTF-8'
         },
       );
-      print("the res is $res");
+      print('part2');
+     
 
       // ignore: use_build_context_synchronously
       httpErrorHandler(
